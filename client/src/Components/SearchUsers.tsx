@@ -44,7 +44,7 @@ export default function SearchUsers({
       document.removeEventListener("click", handleCloseOnOutsideClick);
     };
   }, [search, openSearch]);
-  console.log(search, "search");
+
   return (
     <div className="fixed inset-0 z-10 p-2 bg-black bg-opacity-50 dialog-backdrop backdrop-blur-sm">
       <div className="w-full max-w-lg mx-auto mt-10 ">

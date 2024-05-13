@@ -41,7 +41,6 @@ export default function CheckPassword() {
       data.userId = state?._id;
       checkPassword(data)
         .then((res) => {
-          console.log(res);
           toast.success(res.data.message);
           dispatch(setToken(res.data.token));
           localStorage.setItem("token", res.data.token);

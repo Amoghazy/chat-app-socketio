@@ -30,7 +30,6 @@ export default function CheckEmail() {
     onSubmit: async (data) => {
       checkEmail(data)
         .then((res) => {
-          console.log(res);
           toast.success(res.data.message);
           setTimeout(() => {
             resetForm();

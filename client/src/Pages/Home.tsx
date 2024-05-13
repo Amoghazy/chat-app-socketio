@@ -22,7 +22,6 @@ export default function Home() {
       try {
         const { user } = await fetchUser();
         dispatch(setUserInfo(user));
-        console.log(user, "user");
       } catch (err) {
         console.error("Error fetching user:", err);
       }

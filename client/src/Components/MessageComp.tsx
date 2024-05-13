@@ -48,7 +48,6 @@ export default function MessageComp() {
         setImage(null);
       }
       if (file.type.includes("pdf")) {
-        console.log(file);
         setPDF(file);
         setImage(null);
         setVideo(null);
@@ -76,6 +75,7 @@ export default function MessageComp() {
         video,
         pdf,
       });
+      socket.emit("seen", userId);
       setMessageText("");
       setImage(null);
       setVideo(null);
@@ -104,10 +104,9 @@ export default function MessageComp() {
       });
       socket.on("get-messages", (data) => {
         setAllMessages(data);
-        console.log(userInfo._id, "userInfo._id");
       });
     }
-  }, [userId, socket]);
+  }, [userId, socket, userInfo._id]);
 
   return (
     <div

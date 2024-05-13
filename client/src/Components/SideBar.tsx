@@ -54,6 +54,8 @@ export default function SideBar() {
       socket.emit("sidebar", user._id);
 
       socket.on("converstions", (converstions) => {
+        console.log(" converstions is fired in side bar");
+        console.log(converstions);
         const userConverstions = converstions.map((userConv: any) => {
           if (userConv.sender._id == userConv.receiver._id) {
             return {

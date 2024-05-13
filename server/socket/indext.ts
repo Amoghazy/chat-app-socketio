@@ -91,27 +91,18 @@ io.on("connection", async (socket) => {
         });
         converstion = await creatConverstion.save();
       }
-      if (message.image || message.video || message.pdf) {
-        const url = await uploadMediaMessageToCloudinary(
-          (message.image as Buffer) ||
-            (message.video as Buffer) ||
-            (message.pdf as Buffer)
-        );
-        message.image
-          ? (message.image = url)
-          : message.video
-          ? (message.video = url)
-          : (message.pdf = url);
-      }
+
+      const mediaUrl = await handleMediaMessage(message);
+
       const newMessage = new Message({
         text: message.messageText,
         msgBy: message.sender,
-        imageURL: message.image,
-        videoURL: message.video,
-        pdfURL: message.pdf,
+        imageURL: message.image ? mediaUrl : undefined,
+        videoURL: message.video ? mediaUrl : undefined,
+        pdfURL: message.pdf ? mediaUrl : undefined,
       });
       const savedMessage = await newMessage.save();
-      const updatedConverstion = await Conversation.findByIdAndUpdate(
+       await Conversation.findByIdAndUpdate(
         { _id: converstion?._id },
         {
           $push: {
@@ -148,8 +139,7 @@ io.on("connection", async (socket) => {
       io.to(message.sender).emit("converstions", converstionsSender);
     });
     socket.on("seen", async (userId) => {
-      console.log("seen", userId);
-      console.log("user", user?._id?.toString());
+    
       const converstion = await Conversation.findOne({
         $or: [
           {
@@ -167,12 +157,11 @@ io.on("connection", async (socket) => {
         return;
       }
 
-      const updatedMessages = await Message.updateMany(
-        { _id: { $in: converstion?.messages } ,msgBy: userId},
+    await Message.updateMany(
+        { _id: { $in: converstion?.messages }, msgBy: userId },
         { seen: true },
         { new: true }
       );
-    
 
       const converstionsSender = await getConverstions(user?._id?.toString());
       const converstionsReciever = await getConverstions(userId);
@@ -186,4 +175,13 @@ io.on("connection", async (socket) => {
     });
   }
 });
+
+async function handleMediaMessage(message: any) {
+  if (message.image || message.video || message.pdf) {
+    return await uploadMediaMessageToCloudinary(
+      message.image || message.video || message.pdf
+    );
+  }
+  return null;
+}
 export { server, app };
