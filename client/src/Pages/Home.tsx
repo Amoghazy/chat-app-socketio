@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
-import { Outlet, useLocation } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { fetchUser } from "../api/authApi";
 import logo from "../assets/chat_icon1.svg";
 
@@ -20,6 +20,7 @@ export default function Home() {
   const [unAuthorized, setUnAuthorized] = useState(false);
   const dispatch = useDispatch();
   const location = useLocation();
+  const navigate = useNavigate();
   const { isAuthenticated } = useSelector((state: Istate) => state.userInfo);
 
   useEffect(() => {
@@ -62,7 +63,7 @@ export default function Home() {
 
   const isHome = location.pathname === "/";
   if (unAuthorized) {
-    return <UnAuthorized />;
+    navigate("/auth/email");
   }
 
   return (
