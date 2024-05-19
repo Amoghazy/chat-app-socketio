@@ -1,6 +1,5 @@
 import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
-import { setAvatarColor } from "../redux/actions/userActions";
 import Istate from "../types/Istate";
 
 export default function Avatar({

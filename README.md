@@ -6,7 +6,7 @@ Sure! Below is a suggested README file for your chat app repository on GitHub:
 
 This is a real-time chat application built using Socket.io, Express.js, React, and Node.js. It allows users to communicate with each other instantly through text messages, images, videos, and files.
 
-![Chat App Screenshot](./screenshot.png)
+![Chat App Screenshot](./client//src/assets/Screenshot%202024-05-19%20162456.png)
 
 ## Features
 
