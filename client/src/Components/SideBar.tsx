@@ -189,7 +189,18 @@ export default function SideBar() {
                       </div>
                     )}
                     <p className="text-sm text-slate-400 text-ellipsis line-clamp-1">
-                      {convUser?.lastMsg?.text}
+                      {convUser?.lastMsg?.text.startWith("https://") ? (
+                        <a
+                          className="text-ellipsis line-clamp-1 "
+                          href={convUser?.lastMsg?.text}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          {convUser?.lastMsg?.text}
+                        </a>
+                      ) : (
+                        convUser?.lastMsg?.text
+                      )}
                     </p>
                   </div>
                 </div>
