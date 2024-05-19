@@ -12,7 +12,6 @@ import {
   createSocketConnection,
   getSocketInstance,
 } from "../socket/SocketService";
-import UnAuthorized from "./UnAuthorized";
 import { Helmet } from "react-helmet-async";
 import toast from "react-hot-toast";
 
