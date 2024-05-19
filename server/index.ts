@@ -7,7 +7,7 @@ import router from "./routes";
 import { app, server } from "./socket/indext";
 
 dotenv.config();
-
+console.log(process.env.CLIENT_URL);
 app.use(
   cors({
     credentials: true,
@@ -16,6 +16,11 @@ app.use(
 );
 app.use(express.json());
 app.use(cookieParser());
+app.use("/", (req: any, res: any, next: any) => {
+  res.json({
+    server: "server is running",
+  });
+});
 app.use("/api", router);
 app.use((err: any, req: any, res: any, next: any) => {
   console.log(err.message + " err middelware ");

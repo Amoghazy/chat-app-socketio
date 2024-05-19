@@ -6,6 +6,7 @@ import getUserData from "../../utils/getUserData";
 const userDetails = handelError(
   async (req: Request, res: Response, next: any) => {
     const token = req.cookies.token;
+    console.log(token);
     if (!token) {
       return next(createError.createError(401, "Please login first!"));
     }
