@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import { fetchUser } from "../api/authApi";
 import logo from "../assets/chat_icon1.svg";
@@ -11,8 +11,10 @@ import {
   createSocketConnection,
   getSocketInstance,
 } from "../socket/SocketService";
+import UnAuthorized from "./UnAuthorized";
 
 export default function Home() {
+  const [unAuthorized, setUnAuthorized] = useState(false);
   const dispatch = useDispatch();
   const location = useLocation();
   const { isAuthenticated } = useSelector((state: Istate) => state.userInfo);
@@ -23,7 +25,10 @@ export default function Home() {
         const { user } = await fetchUser();
         dispatch(setUserInfo(user));
       } catch (err) {
-        console.error("Error fetching user:", err);
+        if (err.response?.status === 401) {
+          console.log(err);
+          setUnAuthorized(true);
+        }
       }
     };
     fetchData();
@@ -32,7 +37,6 @@ export default function Home() {
   useEffect(() => {
     const handleOnlineUsers = (onlineUsers: string[]) => {
       dispatch(setOnlineUsers(onlineUsers));
-      console.log(onlineUsers, "onlineUsers");
     };
 
     if (isAuthenticated) {
@@ -52,7 +56,9 @@ export default function Home() {
   }, [dispatch, isAuthenticated]);
 
   const isHome = location.pathname === "/";
-
+  if (unAuthorized) {
+    return <UnAuthorized />;
+  }
   return (
     <>
       <div className="grid lg:grid-cols-[300px,1fr] h-screen max-h-screen">

@@ -19,6 +19,9 @@ export const fetchUser = async () => {
   const data = await authApi.get("/user-details", { withCredentials: true });
   return data.data;
 };
+export const checkUserExist = async (data: { id: string | undefined }) => {
+  return await authApi.post("/check-user", data);
+};
 export const updateUser = async (data: FormData) => {
   return await authApi.patch("/update-user-details", data, {
     withCredentials: true,

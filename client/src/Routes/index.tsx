@@ -7,6 +7,8 @@ import Layout from "../Layout";
 import MessageComp from "./../Components/MessageComp";
 import AuthLayout from "./../AuthLayout";
 import ForgetPassword from "../Pages/ForgetPassword";
+import NotFound from "../Pages/NotFound";
+import Gard from "../Components/Gard";
 
 const router = createBrowserRouter([
   {
@@ -15,11 +17,19 @@ const router = createBrowserRouter([
     children: [
       {
         path: "",
-        element: <Home />,
+        element: (
+          <Gard>
+            <Home />
+          </Gard>
+        ),
         children: [
           {
             path: ":userId",
-            element: <MessageComp />,
+            element: (
+              <Gard>
+                <MessageComp />
+              </Gard>
+            ),
           },
         ],
       },
@@ -45,6 +55,10 @@ const router = createBrowserRouter([
             element: <Registration />,
           },
         ],
+      },
+      {
+        path: "*",
+        element: <NotFound />,
       },
     ],
   },

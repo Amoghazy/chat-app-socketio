@@ -8,6 +8,7 @@ import updateUserDetails from "../controller/userController/updateUserDetails";
 import upload from "../middleware/uploadFile";
 import uploadToCloudinary from "../config/cloudinaryConfig";
 import searchUser from "../controller/userController/searchUser";
+import checkUserExist from "../controller/userController/check-user-exist";
 
 const router = express.Router();
 
@@ -22,6 +23,7 @@ router.post("/checkpassword", checkPassword);
 router.get("/user-details", userDetails);
 router.get("/logout", logout);
 router.get("/search", searchUser);
+router.post("/check-user", checkUserExist);
 router.patch(
   "/update-user-details",
   upload.single("profilePic"),

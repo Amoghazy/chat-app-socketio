@@ -31,10 +31,9 @@ export default function CheckEmail() {
       checkEmail(data)
         .then((res) => {
           toast.success(res.data.message);
-          setTimeout(() => {
-            resetForm();
-            navigate("/auth/password", { state: res.data.data });
-          }, 2000);
+
+          resetForm();
+          navigate("/auth/password", { state: res.data.data });
         })
         .catch((err) => {
           resetForm();

@@ -18,6 +18,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use("/api", router);
 app.use((err: any, req: any, res: any, next: any) => {
+  console.log(err.message + " err middelware ");
   res.status(err.statusCode || 500).json({
     status: err.statusText || "Failed",
     error: true,

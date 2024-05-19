@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
 import { IoSearchOutline } from "react-icons/io5";
 import Spinner from "./Spinner";
@@ -16,18 +17,19 @@ export default function SearchUsers({
   const [loading, setLoading] = useState(false);
   const [users, setUsers] = useState([]);
   const [search, setSearch] = useState("");
-  const handleSearch = async () => {
-    try {
-      setLoading(true);
-      searchUser(search).then((res) => {
-        setLoading(false);
-        setUsers(res.data.data);
-      });
-    } catch (error) {
-      toast.error(error.response.data.message);
-    }
-  };
+
   useEffect(() => {
+    const handleSearch = async () => {
+      try {
+        setLoading(true);
+        searchUser(search).then((res) => {
+          setLoading(false);
+          setUsers(res.data.data);
+        });
+      } catch (error : any) {
+        toast.error(error?.response?.data?.message || "Something went wrong");
+      }
+    };
     handleSearch();
     const handleCloseOnOutsideClick = (event: Event) => {
       if (
@@ -43,7 +45,7 @@ export default function SearchUsers({
     return () => {
       document.removeEventListener("click", handleCloseOnOutsideClick);
     };
-  }, [search, openSearch]);
+  }, [openSearch, closeSearch,search ]);
 
   return (
     <div className="fixed inset-0 z-10 p-2 bg-black bg-opacity-50 dialog-backdrop backdrop-blur-sm">

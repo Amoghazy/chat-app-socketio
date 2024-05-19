@@ -116,10 +116,10 @@ export default function SideBar() {
             />
           </button>
           <button
-            onClick={() => {
+            onClick={async () => {
               dispatch(logout_user());
               localStorage.removeItem("token");
-              logout();
+              await logout();
               navigate("/auth/email");
             }}
             title="logout"

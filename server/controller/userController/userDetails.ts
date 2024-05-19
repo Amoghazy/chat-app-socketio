@@ -7,7 +7,7 @@ const userDetails = handelError(
   async (req: Request, res: Response, next: any) => {
     const token = req.cookies.token;
     if (!token) {
-      return next(createError.createError(401, "Please login first"));
+      return next(createError.createError(401, "Please login first!"));
     }
     const user = await getUserData(token);
     res.status(200).json({ user });

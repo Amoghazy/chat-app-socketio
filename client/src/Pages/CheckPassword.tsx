@@ -44,10 +44,9 @@ export default function CheckPassword() {
           toast.success(res.data.message);
           dispatch(setToken(res.data.token));
           localStorage.setItem("token", res.data.token);
-          setTimeout(() => {
-            resetForm();
-            navigate("/");
-          }, 2000);
+
+          resetForm();
+          navigate("/");
         })
         .catch((err) => {
           resetForm();

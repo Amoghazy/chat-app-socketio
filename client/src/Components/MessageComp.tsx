@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Link, useParams } from "react-router-dom";
-import { useEffect, useRef, useState } from "react";
+import { Key, SetStateAction, useEffect, useRef, useState } from "react";
 import { getSocketInstance } from "../socket/SocketService";
 import Avatar from "./Avatar";
 import { HiOutlineDotsVertical } from "react-icons/hi";
@@ -12,6 +13,10 @@ import backgroundChat from "../assets/p.jpg";
 import Istate from "../types/Istate";
 import { useSelector } from "react-redux";
 import moment from "moment";
+import { checkUserExist } from "../api/authApi";
+import NotFound from "../Pages/NotFound";
+
+import { BiCheckDouble } from "react-icons/bi";
 export default function MessageComp() {
   const lastMessageRef = useRef<HTMLDivElement>(null);
   const { userId } = useParams();
@@ -30,8 +35,9 @@ export default function MessageComp() {
   const [pdf, setPDF] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [UserNotFound, setUserNotFound] = useState(false);
   const socket = getSocketInstance();
-  const [allMessages, setAllMessages] = useState([]);
+  const [allMessages, setAllMessages] = useState<any>([]);
   const handleMenueChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
@@ -85,29 +91,68 @@ export default function MessageComp() {
   };
   useEffect(() => {
     if (lastMessageRef.current) {
-      lastMessageRef.current.scrollIntoView({
-        behavior: "smooth",
-        block: "end",
-        inline: "start",
-      });
+      setTimeout(() => {
+        if (lastMessageRef.current)
+          lastMessageRef.current.scrollIntoView({
+            behavior: "auto",
+            block: "end",
+          });
+      }, 200);
     }
   }, [allMessages]);
+
   useEffect(() => {
     if (socket) {
       socket.emit("seen", userId);
 
       socket.emit("message-page", userId);
 
-      socket.on("message-user", (data) => {
-        setdatauser(data);
-        socket.on("previous-message", (data) => setAllMessages(data));
-      });
-      socket.on("get-messages", (data) => {
+      const handlePreviousMessages = (data: SetStateAction<never[]>) =>
         setAllMessages(data);
-      });
-    }
-  }, [userId, socket, userInfo._id]);
+      const handleMessageUser = (
+        data: SetStateAction<{
+          name: string;
+          email: string;
+          profilePic: string;
+          online: boolean;
+          id: string;
+        }>
+      ) => {
+        console.log(data, "data");
+        setdatauser(data);
+      };
+      const handleGetMessages = (data: any) => {
+        setAllMessages(data);
+        socket.emit("seen", userId);
+      };
 
+      socket.on("previous-message", handlePreviousMessages);
+      socket.on("message-user", handleMessageUser);
+      socket.on("get-messages", handleGetMessages);
+      const handleSeen = (messageId: string) => {
+        setAllMessages((prevMessages: any[]) =>
+          prevMessages.map((message: { _id: string }) =>
+            message._id === messageId ? { ...message, seen: true } : message
+          )
+        );
+      };
+
+      socket.on("message-seen", handleSeen);
+      return () => {
+        socket.off("previous-message", handlePreviousMessages);
+        socket.off("message-user", handleMessageUser);
+        socket.off("get-messages", handleGetMessages);
+        socket.off("message-seen", handleSeen);
+      };
+    }
+  }, [userId, socket]);
+
+  checkUserExist({ id: userId }).catch(() => {
+    setUserNotFound(true);
+  });
+  if (UserNotFound || userId?.length != 24) {
+    return <NotFound userNotfound={true} />;
+  }
   return (
     <div
       style={{ backgroundImage: `url(${backgroundChat})` }}
@@ -154,7 +199,7 @@ export default function MessageComp() {
 
         {/*ALLMESSAGES ARE SHOWN */}
         <div className="p-4" ref={lastMessageRef}>
-          {allMessages.map((message: any, index) => (
+          {allMessages.map((message: any, index: Key | null | undefined) => (
             <div
               key={index}
               className={`px-4 py-2 my-2 bg-white rounded w-fit ${
@@ -196,8 +241,15 @@ export default function MessageComp() {
                 />
               )}
               <p className="px-2">{message.text}</p>
-              <p className="ml-auto text-xs w-fit">
+              <p className="flex items-center ml-auto text-xs w-fit">
                 {moment(message.createdAt).format(" h:mm")}
+                <span
+                  className={`ml-1 ${
+                    message.seen ? "text-cyan-500    " : "text-slate-500"
+                  } `}
+                >
+                  <BiCheckDouble size={17} />
+                </span>
               </p>
             </div>
           ))}

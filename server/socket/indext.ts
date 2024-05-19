@@ -102,7 +102,8 @@ io.on("connection", async (socket) => {
         pdfURL: message.pdf ? mediaUrl : undefined,
       });
       const savedMessage = await newMessage.save();
-       await Conversation.findByIdAndUpdate(
+
+      await Conversation.findByIdAndUpdate(
         { _id: converstion?._id },
         {
           $push: {
@@ -139,7 +140,6 @@ io.on("connection", async (socket) => {
       io.to(message.sender).emit("converstions", converstionsSender);
     });
     socket.on("seen", async (userId) => {
-    
       const converstion = await Conversation.findOne({
         $or: [
           {
@@ -157,12 +157,24 @@ io.on("connection", async (socket) => {
         return;
       }
 
-    await Message.updateMany(
-        { _id: { $in: converstion?.messages }, msgBy: userId },
-        { seen: true },
-        { new: true }
-      );
+      console.log(userId, "userId");
 
+      await Message.updateMany(
+        { _id: { $in: converstion?.messages }, msgBy: userId, seen: false },
+        { seen: true }
+      );
+      const updatedMessages = await Message.find({
+        _id: { $in: converstion?.messages },
+        msgBy: userId,
+        seen: true,
+      });
+      const updatedMessageIds = updatedMessages.map((msg: any) =>
+        msg._id.toString()
+      );
+      updatedMessageIds.forEach((messageId: string) => {
+        io.to(userId).emit("message-seen", messageId);
+        io.to(user?._id?.toString()).emit("message-seen", messageId);
+      });
       const converstionsSender = await getConverstions(user?._id?.toString());
       const converstionsReciever = await getConverstions(userId);
       io.to(userId).emit("converstions", converstionsReciever);

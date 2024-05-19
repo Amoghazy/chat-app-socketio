@@ -22,8 +22,10 @@ export default async function getConverstions(userID: string) {
       (acc: number, msg: any) => {
         if (userID.toString() !== msg?.msgBy.toString()) {
           return acc + (msg?.seen ? 0 : 1);
+        }else{
+
+          return acc;
         }
-        return acc;
       },
       0
     );
