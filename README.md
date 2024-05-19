@@ -24,7 +24,7 @@ This is a real-time chat application built using Socket.io, Express.js, React, a
 - **Authentication**: JWT (JSON Web Tokens)
 - **File Upload**: Cloudinary API
 - **Styling**: Tailwind CSS
-- **Deployment**: Heroku (Backend), Netlify (Frontend)
+- **Deployment**: ONRENDER (Backend), Netlify (Frontend)
 
 ## Installation
 
