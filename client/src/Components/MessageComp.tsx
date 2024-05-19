@@ -225,22 +225,25 @@ export default function MessageComp() {
               )}
               {message.videoURL && (
                 <video
-                  // onLoad={() => {
-                  //   if (index === allMessages.length - 1) {
-                  //     if (lastMessageRef.current)
-                  //       lastMessageRef.current.scrollIntoView({
-                  //         behavior: "smooth",
-                  //         block: "end",
-                  //         inline: "start",
-                  //       });
-                  //   }
-                  // }}
                   src={message.videoURL}
                   className="object-contain py-2 "
                   controls
                 />
               )}
-              <p className="px-2">{message.text}</p>
+
+              <p className="px-2">
+                {message.text.startsWith("https://") ? (
+                  <a
+                    href={message.text}
+                    target="_blank"
+                    className="text-cyan-400 hover:text-cyan-600"
+                  >
+                    {message.text}
+                  </a>
+                ) : (
+                  message.text
+                )}
+              </p>
               <p className="flex items-center ml-auto text-xs w-fit">
                 {moment(message.createdAt).format(" h:mm")}
                 <span
