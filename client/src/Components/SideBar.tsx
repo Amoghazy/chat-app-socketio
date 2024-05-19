@@ -163,7 +163,7 @@ export default function SideBar() {
                   width={14}
                   showName={false}
                 />
-                <div>
+                <div className="w-[168px]">
                   <p className="text-base font-semibold text-ellipsis line-clamp-1">
                     {convUser?.userDetails?.name?.toUpperCase()}
                   </p>
@@ -172,7 +172,7 @@ export default function SideBar() {
                       <div
                         className={`flex ${
                           convUser.lastMsg.text ? "items-end" : "items-center"
-                        } gap-1 text-slate-500`}
+                        } gap-1 text-ellipsis line-clamp-1 text-slate-500`}
                       >
                         <IoImage />
                         {!convUser.lastMsg.text && <span>Image</span>}
