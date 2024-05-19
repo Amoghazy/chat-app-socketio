@@ -204,7 +204,7 @@ export default function MessageComp() {
               key={index}
               className={`px-4 py-2 my-2 bg-white rounded w-fit ${
                 message.msgBy === userInfo._id ? "ml-auto !bg-teal-200" : ""
-              } lg:max-w-md md:max-w-sm max-w-[208px] `}
+              } lg:max-w-md md:max-w-sm max-w-[208px] text-wrap `}
             >
               {message.imageURL && (
                 <img
