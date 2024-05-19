@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useEffect, useState } from "react";
-import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { Outlet, useLocation } from "react-router-dom";
 import { fetchUser } from "../api/authApi";
 import logo from "../assets/chat_icon1.svg";
 
@@ -16,10 +16,8 @@ import { Helmet } from "react-helmet-async";
 import toast from "react-hot-toast";
 
 export default function Home() {
-  const [unAuthorized, setUnAuthorized] = useState(false);
   const dispatch = useDispatch();
   const location = useLocation();
-  const navigate = useNavigate();
   const { isAuthenticated } = useSelector((state: Istate) => state.userInfo);
 
   useEffect(() => {
@@ -30,7 +28,6 @@ export default function Home() {
       } catch (err) {
         if ((err as any)?.response?.status === 401) {
           toast.error((err as any).response.data.message);
-          setUnAuthorized(true);
         } else {
           toast.error("An unexpected error occurred");
         }
@@ -61,9 +58,6 @@ export default function Home() {
   }, [dispatch, isAuthenticated]);
 
   const isHome = location.pathname === "/";
-  if (unAuthorized) {
-    navigate("/auth/email");
-  }
 
   return (
     <>
