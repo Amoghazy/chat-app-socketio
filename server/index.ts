@@ -16,7 +16,7 @@ app.use(
 );
 app.use(express.json());
 app.use(cookieParser());
-app.use("/", (req: any, res: any, next: any) => {
+app.get("/", (req: any, res: any, next: any) => {
   res.json({
     server: "server is running",
   });
