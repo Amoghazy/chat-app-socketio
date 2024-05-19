@@ -190,7 +190,7 @@ export default function SideBar() {
                     )}
                     {convUser?.lastMsg?.text && (
                       <p className="text-sm text-slate-400 text-ellipsis line-clamp-1">
-                        {convUser?.lastMsg?.text?.startWith("https://") ? (
+                        {convUser?.lastMsg?.text?.startsWith("https://") ? (
                           <a
                             className="text-ellipsis line-clamp-1 "
                             href={convUser?.lastMsg?.text}
