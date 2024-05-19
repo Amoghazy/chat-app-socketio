@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from "react";
 import Input from "./Input";
 import Avatar from "./Avatar";
@@ -37,7 +38,11 @@ const EditUserDetails = ({
         closeDialog();
       }, 500);
     } catch (err) {
-      toast.error(err?.response.data.message);
+      if ((err as any)?.response) {
+        toast.error((err as any).response.data.message);
+      } else {
+        toast.error("An unexpected error occurred");
+      }
     }
   };
 
